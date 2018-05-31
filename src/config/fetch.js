@@ -15,7 +15,14 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 		if (dataStr !== '') {
 			dataStr = dataStr.substr(0, dataStr.lastIndexOf('&'));
 			url = url + '?' + dataStr;
-		}
+    }
+    // let dataStr = '';
+    // url += '?';
+    // Object.keys(data).forEach(key => {
+    //   dataStr += key + '=' + data[key] + '&';
+    // })
+    // dataStr = dataStr.substr(0, dataStr.length);
+    // url = url + dataStr;
 	}
 
 	if (window.fetch && method == 'fetch') {

@@ -32,7 +32,6 @@
                     <ul class="groupcity_name_container citylistul clear">
                         <router-link  tag="li" v-for="item in value" :to="'/city/' + item.id" :key="item.id" class="ellipsis">
                             {{item.name}}
-
                         </router-link>
                     </ul>
                 </li>
@@ -64,7 +63,7 @@ export default {
 
         //获取热门城市
         hotcity().then(res => {
-            this.hotcity = res;
+          this.hotcity = res;
         })
 
         //获取所有城市
