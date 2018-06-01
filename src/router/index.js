@@ -23,7 +23,8 @@ export default [{
     },
     {
       path: '/msite',
-      component: msite
+      component: msite,
+      meta: { keepAlive: true },
     }
   ]
 }]

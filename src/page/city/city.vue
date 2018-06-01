@@ -1,19 +1,19 @@
 <template>
   <div class="city_container">
     <hea-top go-back="true" :head-title="cityname">
-      <route-link class="change_city" slot="changecity" to="/home">切换城市</route-link>
+      <router-link class="change_city" slot="changecity" to="/home">切换城市</router-link>
     </hea-top>
     <form class="city_form" v-on:submit.prevent>
       <div>
         <input type="search" name="city" class="city_input input_style" placeholder="输入学校、商务楼、地址" required v-model="inputValue"/>
       </div>
       <div>
-        <input type="submit" name="submit" class="city_submit input_style" @click='postpois' value="提交">
+        <input type="submit" name="submit" class="city_submit input_style" @click="postpois" value="提交">
       </div>
     </form>
     <header v-if="historytitle" class="pois_search_history">搜索历史</header>
     <ul class="getpois_ul">
-      <li v-for="(item, index) in placelist" :key="index" @click='nextpage(index, item.geohash)'>
+      <li v-for="(item, index) in placelist" :key="index" @click="nextpage(index, item.geohash)">
         <h4 class="pois_name ellipsis">{{item.name}}</h4>
         <p class="pois_address ellipsis">{{item.address}}</p>
       </li>
@@ -31,11 +31,13 @@ import {getStore, setStore, removeStore} from '../../config/mUtils'
 export default {
   data() {
     return {
-      cityname: '', // 当前城市名
-      cityid: '', // 当前城市id
-      placelist: '', // 搜索城市列表
       inputValue: '', // 搜索地址
+      cityid: '', // 当前城市id
+      cityname: '', // 当前城市名
+      placelist: [], // 搜索城市列表
+      placeHistory: [], // 存放地址记录
       placeNone: false, // 搜索无结果的提示信息
+      historytitle: true, // 是否显示搜索历史
     }
   },
   components: {
@@ -44,7 +46,7 @@ export default {
   methods: {
     initData() {
       if (getStore('placeHistory')) {
-        this.placelist = JSON.stringify(getStore('placeHistory'));
+        this.placelist = JSON.parse(getStore('placeHistory'));
       } else {
         this.placelist = [];
       }
@@ -54,7 +56,7 @@ export default {
         searchplace(this.cityid, this.inputValue).then(res => {
           this.historytitle = false;
           this.placelist = res;
-          this.placeNone = res.length? false : true;
+          this.placeNone = res.length ? false : true;
         })
       }
     },
@@ -76,7 +78,7 @@ export default {
         this.placeHistory.push(chooseplace);
       }
       setStore('placeHistory', this.placeHistory);
-      this.$router.push({path: '/msite', query: {geohash}})
+      this.$router.push({path:'/msite', query:{geohash}})
     },
     clearAll() {
       removeStore('placeHistory');
@@ -84,7 +86,7 @@ export default {
     }
   },
   mounted() {
-    this.cityid = $route.params.cityid;
+    this.cityid = this.$route.params.cityid;
     currentcity(this.cityid).then(res => {
       this.cityname = res.name;
     })
