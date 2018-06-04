@@ -1,9 +1,9 @@
 <template>
   <div class="shoplist_container">
     <ul v-load-more="loadMore" v-if="shoplistArr.length" type="1">
-      <router-link tag="li" v-for="(item, index) in shoplistArr" :key="index" class="shop_li">
+      <router-link :to="{path: 'shop', query: {geohash, id: item.id}}" tag="li" v-for="(item, index) in shoplistArr" :key="index" class="shop_li">
         <section>
-          <img :src="item.image_url" alt="">
+          <img :src="imgBaseUrl + item.image_path" alt="" class="shop_img">
         </section>
       </router-link>
     </ul>
@@ -12,15 +12,65 @@
 				<img src="../../images/shopback.svg" class="list_back_svg">
 			</li>
 		</ul>
+    <aside class="return_top" @click="backTop" v-if="showBackStatus">
+			<svg class="back_top_svg">
+				<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#backtop"></use>
+			</svg>
+		</aside>
   </div>
 </template>
 
 <script>
+  import {shopList} from '../../service/getData'
+  import loading from './loading'
+  import {mapState} from 'vuex'
   export default {
     data () {
       return {
-
+        imgBaseUrl: 'https://fuss10.elemecdn.com', //图片域名地址
+        shoplistArr: [], // 店铺数据
+        latitude: '', //
+        longitude: '', //
+        offset: '', //
+        restaurantCategoryId: '', //
+        showLoading: true,
+        showBackStatus: '', // 是否显示返回顶部按钮
       }
+    },
+    components: {
+      loading,
+      ratingStar,
+    },
+    props: ['restaurantCategoryId', 'restaurantCategoryIds', 'sortByType', 'deliveryMode', 'supportIds', 'confirmSelect', 'geohash'],
+    computed: {
+      ...mapState([
+        'latitude','longitude'
+      ]),
+    },
+    methods: {
+      async initData() {
+        let res = await shopList(this.latitude, this.longitude, this.offset, this.restaurantCategoryId);
+        shoplistArr = [...res];
+        if (res.length < 20) {
+          this.touchend = true;
+        }
+        this.hideLoading();
+        // 开始监听scrolltop的值，达到一定程度之后显示返回顶部按钮
+        showBack(status => {
+          this.showBackStatus = status;
+        })
+      },
+      // 开发环境与编译环境loading隐藏方式不同
+      hideLoading () {
+        this.showLoading = false;
+      },
+      //返回顶部
+      backTop(){
+        animate(document.body, {scrollTop: '0'}, 400, 'ease-out');
+      },
+    },
+    mounted() {
+      this.initData();
     },
     components: {
 

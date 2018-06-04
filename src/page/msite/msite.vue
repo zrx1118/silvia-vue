@@ -11,23 +11,21 @@
         <span class="title_text ellipsis">{{msiteTitle}}</span>
       </router-link>
     </hea-top>
-    <!-- <nav class="msite_nav">
-      <div class="swiper-container" v-if="foodTypes.length">
-        <div class="swiper-wrapper">
-          <div class="swiper-slide food_types_container" v-for="(item, index) in foodTypes" :key="index">
-            <router-link :to="{path: '/food', query: {geohash, title: item.title, restaurant_category_id: getCategoryId(foodItem.link)}}" v-for="(foodItem, index) in item" :key="index" class="link_to_food">
-              <figure>
-                <img :src="imgBaseUrl + foodItem.image_url" alt=""/>
-                <figcaption>{{foodItem.title}}</figcaption>
-              </figure>
-            </router-link>
-          </div>
-        </div>
-        <div class="swiper-pagination"></div>
-      </div>
+    <nav class="msite_nav">
+      <swiper v-if="foodTypes.length" :options="swiperOption" ref="mySwiper">
+          <swiper-slide  v-for="(item, index) in foodTypes" :key="index" class="food_types_container" @mouseenter.native="stopPlay" @mouseleave.native="play">
+              <router-link :to="{path: '/food', query: {geohash, title: item.title, restaurant_category_id: getCategoryId(foodItem.link)}}" v-for="(foodItem, index) in item" :key="index" class="link_to_food">
+                <figure>
+                  <img :src="imgBaseUrl + foodItem.image_url" alt=""/>
+                  <figcaption>{{foodItem.title}}</figcaption>
+                </figure>
+              </router-link>
+          </swiper-slide>
+          <div class="swiper-pagination" slot="pagination"></div>
+      </swiper>
       <img src="../../images/fl.svg" class="fl_back animation_opactiy" v-else>
-    </nav> -->
-    
+    </nav>
+
     <foot-guide></foot-guide>
   </div>
 </template>
@@ -37,8 +35,9 @@ import {mapMutations} from 'vuex'
 import heaTop from '@/components/header/head'
 import footGuide from '@/components/footer/footGuide'
 import {cityGuess, msiteFoodTypes, msiteAddress} from '../../service/getData'
-// import '@/plugins/swiper.min.js'
-// import '@/style/swiper.min.css'
+import { swiper, swiperSlide } from 'vue-awesome-swiper'
+import 'swiper/dist/css/swiper.css'
+// import '../../config/swiper-3.4.2.min.js'
 
 
 export default {
@@ -48,6 +47,17 @@ export default {
       geohash: '', // 地址经纬值
       foodTypes: [], // msite页面食品分类列表
       imgBaseUrl: 'https://fuss10.elemecdn.com', //图片域名地址
+      swiperOption: {
+        notNextTick: true,
+        autoplay: 3000,
+        loop: true,
+        autoplayDisableOnInteraction: true,
+        direction: 'horizontal',
+        paginationType: 'bullets',
+        paginationClickable: true,
+        pagination: 'swiper-pagination',
+        observeParents: true
+      }
     }
   },
   async beforeMount() {
@@ -63,7 +73,9 @@ export default {
   },
   components: {
     heaTop,
-    footGuide
+    footGuide,
+    swiper,
+    swiperSlide
   },
   methods: {
     // 解码url地址，求去restaurant_category_id值
@@ -74,24 +86,28 @@ export default {
       }else{
         return ''
       }
+    },
+    stopPlay() {
+      this.mySwiper.stopAutoplay()
+    },
+    paly () {
+      this.mySwiper.startAutoplay()
+    }
+  },
+  computed: {
+    mySwiper () {
+      return this.$refs.mySwiper.swiper
     }
   },
   mounted() {
-    // msiteFoodTypes(this.geohash).then(res => {
-    //   let resArr = [...res];
-    //   let fooArr = []
-    //   for(let i = 0, j = 0, length = res.length; i < length; i += 8, j++) {
-    //     fooArr[j] = resArr.splice(0, 8);
-    //   }
-    //   this.foodTypes = fooArr;
-    //   console.log(res)
-    //   console.log(fooArr)
-    // }).then(() => {
-    //   new Swiper('.swiper-container', {
-    //     pagination: '.swiper-pagination',
-    //     loop: true
-    //   })
-    // })
+    msiteFoodTypes(this.geohash).then(res => {
+      let resArr = [...res];
+      let fooArr = []
+      for (let i = 0, j = 0, length = res.length; i < length; i += 8, j++) {
+        fooArr[j] = resArr.splice(0, 8);
+      }
+      this.foodTypes = fooArr;
+    })
   }
 }
 </script>
@@ -124,7 +140,7 @@ export default {
 			.wh(100%, auto);
 			padding-bottom: 0.6rem;
 			.swiper-pagination{
-				bottom: -0.2rem;
+				bottom: 0.2rem;
 			}
 		}
 		.fl_back{
