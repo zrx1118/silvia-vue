@@ -11,7 +11,7 @@
         <span class="title_text ellipsis">{{msiteTitle}}</span>
       </router-link>
     </hea-top>
-    <nav class="msite_nav">
+    <nav class="msite_nav aswiper-box" ref="swiperBox">
       <swiper v-if="foodTypes.length" :options="swiperOption" ref="mySwiper">
           <swiper-slide  v-for="(item, index) in foodTypes" :key="index" class="food_types_container" @mouseenter.native="stopPlay" @mouseleave.native="play">
               <router-link :to="{path: '/food', query: {geohash, title: item.title, restaurant_category_id: getCategoryId(foodItem.link)}}" v-for="(foodItem, index) in item" :key="index" class="link_to_food">
@@ -25,19 +25,19 @@
       </swiper>
       <img src="../../images/fl.svg" class="fl_back animation_opactiy" v-else>
     </nav>
-
+    <shop-list v-if="hasGetData" :geohash="geohash"></shop-list>
     <foot-guide></foot-guide>
   </div>
 </template>
 
 <script>
 import {mapMutations} from 'vuex'
-import heaTop from '@/components/header/head'
-import footGuide from '@/components/footer/footGuide'
+import heaTop from 'components/header/head'
+import footGuide from 'components/footer/footGuide'
 import {cityGuess, msiteFoodTypes, msiteAddress} from '../../service/getData'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import 'swiper/dist/css/swiper.css'
-// import '../../config/swiper-3.4.2.min.js'
+import shopList from 'components/common/shoplist'
 
 
 export default {
@@ -47,16 +47,17 @@ export default {
       geohash: '', // 地址经纬值
       foodTypes: [], // msite页面食品分类列表
       imgBaseUrl: 'https://fuss10.elemecdn.com', //图片域名地址
+      hasGetData: false, // 是否已经获取地理位置数据，成功之后再获取商铺列表信息
       swiperOption: {
         notNextTick: true,
-        autoplay: 3000,
-        loop: true,
-        autoplayDisableOnInteraction: true,
-        direction: 'horizontal',
+        // autoplay: 3000,
+        // loop: true,
+        // autoplayDisableOnInteraction: true,
+        // direction: 'horizontal',
+        pagination: '.swiper-pagination',
         paginationType: 'bullets',
         paginationClickable: true,
-        pagination: 'swiper-pagination',
-        observeParents: true
+        // observeParents: true
       }
     }
   },
@@ -67,17 +68,28 @@ export default {
     } else {
       this.geohash = this.$route.query.geohash;
     }
+    //保存geohash 到vuex
+    this.SAVE_GEOHASH(this.geohash);
     //获取位置信息
     let res = await msiteAddress(this.geohash);
     this.msiteTitle = res.name;
+    // 记录当前经度纬度
+    this.RECORD_ADDRESS(res);
+
+    this.hasGetData = true;
   },
   components: {
     heaTop,
     footGuide,
+    shopList,
     swiper,
     swiperSlide
   },
   methods: {
+    ...mapMutations([
+      'RECORD_ADDRESS',
+      'SAVE_GEOHASH'
+    ]),
     // 解码url地址，求去restaurant_category_id值
     getCategoryId(url){
       let urlData = decodeURIComponent(url.split('=')[1].replace('&target_name',''));
@@ -96,13 +108,13 @@ export default {
   },
   computed: {
     mySwiper () {
-      return this.$refs.mySwiper.swiper
+      return this.$refs.mySwiper.swiper;
     }
   },
   mounted() {
     msiteFoodTypes(this.geohash).then(res => {
       let resArr = [...res];
-      let fooArr = []
+      let fooArr = [];
       for (let i = 0, j = 0, length = res.length; i < length; i += 8, j++) {
         fooArr[j] = resArr.splice(0, 8);
       }
@@ -136,13 +148,13 @@ export default {
 		background-color: #fff;
 		border-bottom: 0.025rem solid @bc;
 		height: 10.6rem;
-		.swiper-container{
-			.wh(100%, auto);
-			padding-bottom: 0.6rem;
-			.swiper-pagination{
-				bottom: 0.2rem;
-			}
-		}
+		// .swiper-container{
+		// 	.wh(100%, auto);
+		// 	padding-bottom: 0.6rem;
+		// 	.swiper-pagination{
+		// 		bottom: 0.2rem;
+		// 	}
+		// }
 		.fl_back{
 			.wh(100%, 100%);
 		}

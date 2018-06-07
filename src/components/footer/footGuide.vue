@@ -20,29 +20,29 @@
       </defs>
     </svg>
 
-    <section @click = "gotoAddress({path: '/msite', query: {geohash}})" class="guide_item">
+    <section @click="gotoAddress({path: '/msite', query: {geohash}})" class="guide_item">
       <svg class="icon_style">
           <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="$route.path.indexOf('msite') !== -1? '#msiteActive' : '#msite'"></use>
       </svg>
-      <span>外卖</span>
+      <span :class="$route.path.indexOf('msite') !== -1? 'blue' : ''">外卖</span>
     </section>
-    <section @click = "gotoAddress({path: `/search/${geohash}`})" class="guide_item">
+    <section @click="gotoAddress({path: `/search/${geohash}`})" class="guide_item">
       <svg class="icon_style">
           <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="$route.path.indexOf('search') !== -1? '#findActive' : '#find'"></use>
       </svg>
-      <span>搜索</span>
+      <span :class="$route.path.indexOf('search') !== -1? 'blue' : ''">搜索</span>
     </section>
-    <section @click = "gotoAddress('/order')" class="guide_item">
+    <section @click="gotoAddress('/order')" class="guide_item">
       <svg class="icon_style">
           <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="$route.path.indexOf('order') !== -1? '#orderActive' : '#order'"></use>
       </svg>
-      <span>订单</span>
+      <span :class="$route.path.indexOf('order') !== -1? 'blue' : ''">订单</span>
     </section>
-    <section @click = "gotoAddress('/profile')" class="guide_item">
+    <section @click="gotoAddress('/profile')" class="guide_item">
       <svg class="icon_style">
           <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="$route.path.indexOf('profile') !== -1? '#profileActive' : '#profile'"></use>
       </svg>
-      <span>我的</span>
+      <span :class="$route.path.indexOf('profile') !== -1? 'blue' : ''">我的</span>
     </section>
   </section>
 </template>
@@ -65,7 +65,7 @@ import {mapState} from 'vuex'
     },
     methods: {
       gotoAddress(url) {
-        this.$route.push(url)
+        this.$router.push(url)
       }
     }
   }
@@ -98,6 +98,9 @@ import {mapState} from 'vuex'
     }
     span{
       .sc(.45rem, #666);
+      &.blue{
+        color: @blue;
+      }
     }
   }
 

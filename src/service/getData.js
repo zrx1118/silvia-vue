@@ -177,7 +177,7 @@ export const mobileCode = phone => fetch('/v4/mobile/verify_code/send', {
 /**
  * 获取图片验证码
  */
-export const getcaptchas = () => fetch('/v1/captchas', {},'POST');
+export const getcaptchas = () => fetch('/v1/captchas', {}, 'POST');
 
 
 /**
@@ -368,7 +368,7 @@ export const getUser = () => fetch('/v1/user', {user_id: getStore('user_id')});
 /**
  * 手机号登录
  */
-var sendLogin = (code, mobile, validate_token) => fetch('/v1/login/app_mobile', {
+export const sendLogin = (code, mobile, validate_token) => fetch('/v1/login/app_mobile', {
 	code,
 	mobile,
 	validate_token

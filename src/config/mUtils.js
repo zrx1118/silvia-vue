@@ -36,9 +36,9 @@ export const getStyle = (element, attr, NumberMode = 'int') => {
     }else if(element.currentStyle){
         target = element.currentStyle[attr];
     }else{
-        target = document.defaultView.getComputedStyle(element,null)[attr];
+        target = document.defaultView.getComputedStyle(element,null)[attr]; // 除了ie8及以下浏览器，其他浏览器，大部分时候，document.defaultView === window
     }
-    //在获取 opactiy 时需要获取小数 parseFloat
+    // 在获取 opactiy 时需要获取小数 parseFloat
     return  NumberMode == 'float'? parseFloat(target) : parseInt(target);
 }
 
@@ -51,12 +51,12 @@ export const loadMore = (element, callback) => {
 	let setTop;
 	let paddingBottom;
 	let marginBottom;
-    let requestFram;
-    let oldScrollTop;
+  let requestFram;
+  let oldScrollTop;
 
-    document.body.addEventListener('scroll',() => {
-       loadMore();
-    }, false)
+  document.body.addEventListener('scroll',() => {
+      loadMore();
+  }, false)
     //运动开始时获取元素 高度 和 offseTop, pading, margin
 	element.addEventListener('touchstart',() => {
         height = element.offsetHeight;
@@ -196,23 +196,23 @@ export const animate = (element, target, duration = 400, mode = 'ease-out', call
 
     //去掉传入的后缀单位
     Object.keys(target).forEach(attr => {
-        if (unit[attr] == 'rem') {
-            target[attr] = Math.ceil(parseInt(target[attr])*rootSize);
-        }else{
-            target[attr] = parseInt(target[attr]);
-        }
-    });
+      if (unit[attr] == 'rem') {
+        target[attr] = Math.ceil(parseInt(target[attr])*rootSize);
+      } else {
+        target[attr] = parseInt(target[attr]);
+      }
+    })
 
 
     let flag = true; //假设所有运动到达终点
-    const remberSpeed = {};//记录上一个速度值,在ease-in模式下需要用到
+    const remberSpeed = {}; // 记录上一个速度值,在ease-in模式下需要用到
     element.timer = setInterval(() => {
         Object.keys(target).forEach(attr => {
-            let iSpeed = 0;  //步长
-            let status = false; //是否仍需运动
-            let iCurrent = attrStyle(attr) || 0; //当前元素属性址
-            let speedBase = 0; //目标点需要减去的基础值，三种运动状态的值都不同
-            let intervalTime; //将目标值分为多少步执行，数值越大，步长越小，运动时间越长
+            let iSpeed = 0;  // 步长
+            let status = false; // 是否仍需运动
+            let iCurrent = attrStyle(attr) || 0; // 当前元素属性值
+            let speedBase = 0; // 目标点需要减去的基础值，三种运动状态的值都不同
+            let intervalTime; // 将目标值分为多少步执行，数值越大，步长越小，运动时间越长
             switch(mode){
                 case 'ease-out':
                     speedBase = iCurrent;
