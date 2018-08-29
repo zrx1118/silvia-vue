@@ -34,7 +34,7 @@
 import {mapMutations} from 'vuex'
 import heaTop from 'components/header/head'
 import footGuide from 'components/footer/footGuide'
-import {cityGuess, msiteFoodTypes, msiteAddress} from '../../service/getData'
+import {cityGuess, msiteFoodTypes, msiteAddress} from '@/service/getData'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import 'swiper/dist/css/swiper.css'
 import shopList from 'components/common/shoplist'
@@ -48,6 +48,9 @@ export default {
       foodTypes: [], // msite页面食品分类列表
       imgBaseUrl: 'https://fuss10.elemecdn.com', //图片域名地址
       hasGetData: false, // 是否已经获取地理位置数据，成功之后再获取商铺列表信息
+      dataList:[
+
+      ],
       swiperOption: {
         notNextTick: true,
         // autoplay: 3000,

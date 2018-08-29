@@ -45,7 +45,7 @@
     </p>
     <div class="login_container" @click="mobileLogin">登录</div>
     <router-link to="/forget" class="to_forget" v-if="!loginWay">重置密码</router-link>
-    <alert-tip :closeTip="closeTip" v-if="showAlert" :showhide="showAlert" :alertText="alertText"></alert-tip>
+    <alert-tip @closeTip="closeTip" v-if="showAlert" :showhide="showAlert" :alertText="alertText"></alert-tip>
   </div>
 </template>
 
@@ -160,10 +160,6 @@
           }
           this.userInfo = await accountLogin(this.userAccount, this.passWord, this.codeNumber);
         }
-
-        // if (this.phoneNumber === '13466512832' && this.mobileCode === '123456') {
-        //   this.$router.go(-1);
-        // }
         // 如果返回的值不正确，则弹出提示框，返回的值正确则返回上一页
         if (!this.userInfo.user_id) {
           this.alertText = this.userInfo.message;

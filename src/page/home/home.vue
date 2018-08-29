@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import heaTop from '@/components/header/head'
+import heaTop from 'components/header/head'
 import {cityGuess, hotcity, groupcity} from '../../service/getData'
 
 export default {
@@ -75,7 +75,6 @@ export default {
     components:{
         heaTop
     },
-
     computed:{
         //将获取的数据按照A-Z字母开头排序
         sortgroupcity(){

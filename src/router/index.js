@@ -7,6 +7,8 @@ const search = r => require.ensure([], () => r(require('../page/search/search'))
 const login = r => require.ensure([], () => r(require('../page/login/login')), 'login')
 const profile = r => require.ensure([], () => r(require('../page/profile/profile')), 'profile')
 const order = r => require.ensure([], () => r(require('../page/order/order')), 'order')
+const download = r => require.ensure([], () => r(require('../page/download/download')), 'download')
+const vipcard = r => require.ensure([], () => r(require('../page/vipcard/vipcard')), 'vipcard')
 
 
 export default [{
@@ -45,6 +47,16 @@ export default [{
     {
       path: '/order',
       component: order
+    },
+    //下载页
+    {
+      path: '/download',
+      component: download
+    },
+    //下载页
+    {
+      path: '/vipcard',
+      component: vipcard
     },
   ]
 }]
