@@ -1,12 +1,12 @@
 import Vue from "vue";
-import App from "./App";
+import Another from "./Another";
 // import router from "./router";
 
 Vue.config.productionTip = false;
 
 new Vue({
-  el: "#app",
+  el: "#another",
   // router,
-  components: { App },
-  template: "<App/>"
+  components: { Another },
+  template: "<Another/>"
 });

@@ -1,13 +1,13 @@
 <template>
-  <div id="app">我是{{app}}</div>
+  <div id="another">我是{{another}}</div>
 </template>
 
 <script>
 export default {
-  name: "app",
+  name: "another",
   data() {
     return {
-      app: "app页面"
+      another: "另一个页面"
     };
   }
 };
