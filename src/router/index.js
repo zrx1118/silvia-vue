@@ -1,62 +1,15 @@
-import App from '../App'
+import Vue from 'vue'
+import Router from 'vue-router'
+import HelloWorld from '@/components/HelloWorld'
 
-const home = r => require.ensure([], () => r(require('../page/home/home')), 'home')
-const city = r => require.ensure([], () => r(require('../page/city/city')), 'city')
-const msite = r => require.ensure([], () => r(require('../page/msite/msite')), 'msite')
-const search = r => require.ensure([], () => r(require('../page/search/search')), 'search')
-const login = r => require.ensure([], () => r(require('../page/login/login')), 'login')
-const profile = r => require.ensure([], () => r(require('../page/profile/profile')), 'profile')
-const order = r => require.ensure([], () => r(require('../page/order/order')), 'order')
-const download = r => require.ensure([], () => r(require('../page/download/download')), 'download')
-const vipcard = r => require.ensure([], () => r(require('../page/vipcard/vipcard')), 'vipcard')
+Vue.use(Router)
 
-
-export default [{
-  path: '/',
-  component: App,
-  children: [
+export default new Router({
+  routes: [
     {
-      path: '',
-      redirect: '/home'
-    },
-    {
-      path: '/home',
-      component: home
-    },
-    {
-      path: '/city/:cityid',
-      component: city
-    },
-    {
-      path: '/msite',
-      component: msite,
-      meta: { keepAlive: true },
-    },
-    {
-      path: '/search/:geohash',
-      component: search
-    },
-    {
-      path: '/login',
-      component: login
-    },
-    {
-      path: '/profile',
-      component: profile
-    },
-    {
-      path: '/order',
-      component: order
-    },
-    //下载页
-    {
-      path: '/download',
-      component: download
-    },
-    //下载页
-    {
-      path: '/vipcard',
-      component: vipcard
-    },
+      path: '/',
+      name: 'HelloWorld',
+      component: HelloWorld
+    }
   ]
-}]
+})
